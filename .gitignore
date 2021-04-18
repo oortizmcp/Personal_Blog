@@ -112,6 +112,7 @@ venv.bak/
 .idea
 /.env
 /.idea
+#
 # Spyder project settings
 .spyderproject
 .spyproject
