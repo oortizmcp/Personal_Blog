@@ -45,7 +45,7 @@ jobs:
         with:
           inline-script: |
             az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
-            az webapp up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN }}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEBAPP_NAME }}"
+            az webapp up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN }}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
         
         # Create postgres
       - name: Create Postgres
