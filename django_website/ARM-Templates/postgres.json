@@ -21,7 +21,7 @@
       "type": "string"
     },
     "POSTGRES_PASSWORD": {
-      "type": "string"
+      "type": "securestring"
     }
   },
   "functions": [],

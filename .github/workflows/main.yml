@@ -38,6 +38,7 @@ jobs:
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
           
       - name: Create Web App
         uses: azure/CLI@v1
@@ -45,7 +46,8 @@ jobs:
         with:
           inline-script: |
             az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
-            az webapp up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN }}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
+            az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/webapp.json --parameters @webapp.parameters.json 
+            
         
         # Create postgres
       - name: Create Postgres
@@ -53,6 +55,7 @@ jobs:
         continue-on-error: false
         with:
           inline-script: |
+            az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/postgres.json --parameters @postgres.parameters.json 
             az postgres up --resource-group ${{ env.RESOURCEGROUPNAME }} --location ${{ env.LOCATION }} --sku-name ${{ env.POSTGRES_SKU }} --server-name ${{ env.POSTGRES_SERVER_NAME }} --database-name ${{ env.POSTGRES_DB_NAME }} --admin-user ${{ env.POSTGRES_ADMIN }} --admin-password ${{ secrets.POSTGRES_PASSWORD }} --ssl-enforcement Enabled
           
         # Configure environment variables to connect the database
