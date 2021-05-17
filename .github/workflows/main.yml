@@ -46,7 +46,7 @@ jobs:
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
-          inline-script: |
+          inlineScript: |
                 az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
                 az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/webapp.json --parameters @webapp.parameters.json 
             
@@ -56,7 +56,7 @@ jobs:
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
-          inline-script: |
+          inlineScript: |
                 az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/postgres.json --parameters @postgres.parameters.json 
                 az postgres up --resource-group ${{ env.RESOURCEGROUPNAME }} --location ${{ env.LOCATION }} --sku-name ${{ env.POSTGRES_SKU }} --server-name ${{ env.POSTGRES_SERVER_NAME }} --database-name ${{ env.POSTGRES_DB_NAME }} --admin-user ${{ env.POSTGRES_ADMIN }} --admin-password ${{ secrets.POSTGRES_PASSWORD }} --ssl-enforcement Enabled
           
@@ -65,7 +65,7 @@ jobs:
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
-          inline-script: |
+          inlineScript: |
                 az webapp config appsettings set --settings DBHOST="${{ env.POSTGRES_SERVER_NAME }}" DBNAME="${{ env.POSTGRES_DB_NAME }}" DBUSER="${{ env.POSTGRES_ADMIN }}" DBPASS="${{ secrets.POSTGRES_PASSWORD }}"
           
           
