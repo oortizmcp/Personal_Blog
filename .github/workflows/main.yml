@@ -40,26 +40,33 @@ jobs:
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-          
-      - name: Create Web App
+
+        # Create Resource Group
+      - name: Create Resource Group
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
           inlineScript: |
                 az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
-                az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/webapp.json --parameters @webapp.parameters.json 
-            
-        
+                
         # Create postgres
       - name: Create Postgres
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
           inlineScript: |
-                az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./django_website/ARM-Templates/postgres.json --parameters @postgres.parameters.json 
-                az postgres up --resource-group ${{ env.RESOURCEGROUPNAME }} --location ${{ env.LOCATION }} --sku-name ${{ env.POSTGRES_SKU }} --server-name ${{ env.POSTGRES_SERVER_NAME }} --database-name ${{ env.POSTGRES_DB_NAME }} --admin-user ${{ env.POSTGRES_ADMIN }} --admin-password ${{ secrets.POSTGRES_PASSWORD }} --ssl-enforcement Enabled
-          
+                az postgres up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --server-name "${{ env.POSTGRES_SERVER_NAME }}" --database-name "${{ env.POSTGRES_DB_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
+
+
+      - name: Create Web App
+              uses: Azure/cli@1.0.4
+              continue-on-error: false
+              with:
+                inlineScript: |
+                      az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
+                                
+
+
         # Configure environment variables to connect the database
       - name: Configure WebApp
         uses: Azure/cli@1.0.4
