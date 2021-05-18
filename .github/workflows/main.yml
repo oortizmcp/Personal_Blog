@@ -55,6 +55,7 @@ jobs:
         continue-on-error: false
         with:
           inlineScript: |
+                az extension add --name db-up
                 az postgres up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --server-name "${{ env.POSTGRES_SERVER_NAME }}" --database-name "${{ env.POSTGRES_DB_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
 
 
