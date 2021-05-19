@@ -72,7 +72,7 @@ jobs:
         continue-on-error: false
         with:
           inlineScript: |
-              az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
+          az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
 
 
 
