@@ -41,6 +41,7 @@ jobs:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+
         # Create Resource Group
       - name: Create Resource Group
         uses: Azure/cli@1.0.4
@@ -49,23 +50,30 @@ jobs:
           inlineScript: |
                 az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
                 
+        # Add db-up extension
+      - name: Add db extension to deployment
+        uses: Azure/cli@1.0.4
+        continue-on-error: false
+        with:
+          inlineScript: |
+              az extension add --name db-up
+
         # Create postgres
       - name: Create Postgres
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
-          inlineScript: |
-                az extension add --name db-up
-                az postgres up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --server-name "${{ env.POSTGRES_SERVER_NAME }}" --database-name "${{ env.POSTGRES_DB_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
+          inlineScript: | 
+          az postgres up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --server-name "${{ env.POSTGRES_SERVER_NAME }}" --database-name "${{ env.POSTGRES_DB_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
 
-
+        # Create Web App
       - name: Create Web App
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
           inlineScript: |
-                az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
-                                
+              az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
+
 
 
         # Configure environment variables to connect the database
