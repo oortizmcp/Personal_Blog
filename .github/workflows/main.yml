@@ -50,21 +50,14 @@ jobs:
           inlineScript: |
             az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
                 
-        # Add db-up extension
-      - name: Add db extension to deployment
-        uses: Azure/cli@1.0.4
-        continue-on-error: false
-        with:
-          inlineScript: |
-            az extension update -n db-up
-
         # Create postgres
       - name: Create Postgres
         uses: Azure/cli@1.0.4
         continue-on-error: false
         with:
           inlineScript: | 
-            az postgres up --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --server-name "${{ env.POSTGRES_SERVER_NAME }}" --database-name "${{ env.POSTGRES_DB_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
+            az postgres server create --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --name "${{ env.POSTGRES_SERVER_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
+            az postgres server show --resource-group "${{ env.RESOURCEGROUPNAME }}"
 
         # Create WebApp
       - name: Create WebApp
@@ -72,7 +65,7 @@ jobs:
         continue-on-error: false
         with:
           inlineScript: |
-            az webapp up --resource-group "{{ env.RESOURCEGROUPNAME}}" --location "${{ env.LOCATION }}" --plan "${{ env.ASP_PLAN}}" --sku "${{ env.WEBAPP_SKU }}" --name "${{ env.AZ_WEPAPP_NAME }}"
+            az webapp create --resource-group "{{ env.RESOURCEGROUPNAME}}" --plan "${{ env.ASP_PLAN}}" --name "${{ env.AZ_WEPAPP_NAME }}" --runtime "python|3.6"
 
 
 
@@ -82,7 +75,7 @@ jobs:
         continue-on-error: false
         with:
           inlineScript: |
-                az webapp config appsettings set --settings DBHOST="${{ env.POSTGRES_SERVER_NAME }}" DBNAME="${{ env.POSTGRES_DB_NAME }}" DBUSER="${{ env.POSTGRES_ADMIN }}" DBPASS="${{ secrets.POSTGRES_PASSWORD }}"
+            az webapp config appsettings set --settings DBHOST="${{ env.POSTGRES_SERVER_NAME }}" DBUSER="${{ env.POSTGRES_ADMIN }}" DBPASS="${{ secrets.POSTGRES_PASSWORD }}"
           
           
           
