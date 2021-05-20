@@ -17,7 +17,7 @@ env:
   POSTGRES_SERVER_NAME: 'oovpostgresql51721'
   POSTGRES_SKU: 'B_Gen5_1'
   POSTGRES_DB_NAME: 'blogdb'
-  POSTGRES_ADMIN: 'admin'
+  POSTGRES_ADMIN: 'cloudadmin'
   
   
 
