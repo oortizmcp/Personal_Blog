@@ -57,7 +57,6 @@ jobs:
         with:
           inlineScript: | 
             az postgres server create --resource-group "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}" --sku-name "${{ env.POSTGRES_SKU }}" --name "${{ env.POSTGRES_SERVER_NAME }}" --admin-user "${{ env.POSTGRES_ADMIN }}" --admin-password "${{ secrets.POSTGRES_PASSWORD }}" --ssl-enforcement Enabled
-            az postgres server show --resource-group "${{ env.RESOURCEGROUPNAME }}"
 
         # Create WebApp
       - name: Create WebApp
