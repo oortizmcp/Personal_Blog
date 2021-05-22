@@ -131,3 +131,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.bicep
+
+# Terraform
+*.terraform
+.terraform.lock.*
