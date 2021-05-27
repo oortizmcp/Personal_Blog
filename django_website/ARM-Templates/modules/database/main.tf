@@ -1,7 +1,7 @@
-  provider "azurerm" {
+provider "azurerm" {
   features {}
 
- }
+}
 
 
 resource "azurerm_postgresql_server" "server" {
@@ -12,11 +12,11 @@ resource "azurerm_postgresql_server" "server" {
   sku_name = var.sku_name
 
   storage_mb                   = var.storage_mb
-  administrator_login           = var.administrator_login
-  administrator_login_password  = var.administrator_login_password
-  version                       = var.server_version
-  ssl_enforcement_enabled       = var.ssl_enforcement_enabled
-  
+  administrator_login          = var.administrator_login
+  administrator_login_password = var.administrator_login_password
+  version                      = var.server_version
+  ssl_enforcement_enabled      = var.ssl_enforcement_enabled
+
 }
 
 resource "azurerm_postgresql_database" "db" {
